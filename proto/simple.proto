@@ -1,0 +1,42 @@
+syntax = "proto3";
+package simple;
+
+option go_package = "github.com/razvanincrys/simplegrpc/pb";
+
+
+message GetMyVariableRequest {
+  string variable_name = 1;
+}
+
+message GetMyVariableResponse {
+  string variable_value = 1;
+}
+
+
+message Variables {
+  string name  = 1;
+  string value = 2;
+}
+
+// The request message with no parameters.
+message ListMyAllVariableRequest {}
+
+// The response message containing the list of variables
+message ListAllMyVariableResponse {
+  repeated Variables variables = 1;
+}
+
+// The request message with no parameters.
+message DeleteAllMyVariableRequest {}
+
+// The response message containing the list of variables
+message DeleteAllMyVariableResponse {
+  bool deleted = 1;
+}
+
+service VariableService {
+  rpc GetMyVariable(GetMyVariableRequest) returns (GetMyVariableResponse) {}
+  rpc ListAllMyVariables(ListMyAllVariableRequest) returns (ListAllMyVariableResponse) {}
+  rpc DeleteAllMyVariables(DeleteAllMyVariableRequest) returns (DeleteAllMyVariableResponse) {}
+}
+
