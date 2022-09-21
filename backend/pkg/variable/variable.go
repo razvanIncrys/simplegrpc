@@ -37,7 +37,8 @@ func GetAllMyVariablesFromEnvironment() []Variable {
 	for _, e := range os.Environ() {
 		pair := strings.Split(e, "=")
 		if strings.Contains(pair[0], "SIMPLEGRPC_") {
-			variables = append(variables, Variable{Name: pair[0], Value: pair[1]})
+			varName := strings.Replace(pair[0], "SIMPLEGRPC_", "", 1)
+			variables = append(variables, Variable{Name: varName, Value: pair[1]})
 		}
 	}
 	return variables

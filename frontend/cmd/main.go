@@ -1,27 +1,19 @@
 package main
 
-import "github.com/razvanIncrys/simplegrpc/frontend/pkg/webserver"
+import (
+	"github.com/razvanIncrys/simplegrpc/frontend/pkg/gClient"
+	"github.com/razvanIncrys/simplegrpc/frontend/pkg/webserver"
+)
 
-const webPort = ":8080"
+const (
+	webPort  = ":8080"
+	GRPCPort = ":9000"
+)
 
 func main() {
 
-	webServer := webserver.NewWebServer()
+	gClient := gClient.NewClient(GRPCPort)
+	webServer := webserver.NewWebServer(gClient)
 	webServer.Start(webPort)
 
 }
-
-/*
-const port = ":9000"
-
-func main() {
-
-	conn, err := grpc.Dial("localhost"+port, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer conn.Close()
-
-	gClient.NewClient(conn)
-}
-*/
