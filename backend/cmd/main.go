@@ -1,23 +1,36 @@
 package main
 
 import (
+	"context"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/razvanIncrys/simplegrpc/backend/pb"
 	"github.com/razvanIncrys/simplegrpc/backend/pkg/server"
-	"github.com/razvanIncrys/simplegrpc/pb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 	"log"
 	"net"
+	"net/http"
 	"os"
 )
 
 const (
-	PORT = "9000"
+	PORT      = "9000"
+	HTTP_PORT = "80"
 )
 
 // start server
 func main() {
 
 	os.Setenv("SIMPLE_MESSAGE", "This is a simple message")
+
+	myServer := server.Server{}
+
+	go func() {
+		mux := runtime.NewServeMux()
+		pb.RegisterVariableServiceHandlerServer(context.Background(), mux, &myServer)
+		log.Printf("Start hgateway on port %s", HTTP_PORT)
+		log.Fatalln("gateway error:", http.ListenAndServe(":"+HTTP_PORT, mux))
+	}()
 
 	lis, err := net.Listen("tcp", "0.0.0.0:"+PORT)
 	if err != nil {
@@ -26,7 +39,7 @@ func main() {
 
 	gServer := grpc.NewServer()
 
-	pb.RegisterVariableServiceServer(gServer, &server.Server{})
+	pb.RegisterVariableServiceServer(gServer, &myServer)
 	log.Printf("Start server on port %s", PORT)
 
 	reflection.Register(gServer)

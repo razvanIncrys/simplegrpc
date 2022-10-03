@@ -14,14 +14,28 @@
           </p>
         </div>
 
-             <form id="myForm" method="post" action="">
+
               <div class="input-group mb-3">
                 <input type="text" class="form-control" id="name" placeholder="Add variable name" aria-label="Variable name" aria-describedby="basic-addon2">
-
+                 <input type="text" class="form-control" id="value" placeholder="Add variable value" aria-label="Variable value" aria-describedby="basic-addon2">
+                 <input  type="hidden"  id="target">
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Select target server
+                      </button>
+                      <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#">backend_server_1</a>
+                        <a class="dropdown-item" href="#">backend_server_2</a>
+                      </div>
+                    </div>
               </div>
 
+              {{if .error}}
+                    <div class="alert alert-danger" style="font-size: medium;" role="alert">
+                      {{.error}}
+                    </div>
+             {{end}}
 
-             </form>
              {{if .message}}
                     <div class="alert alert-primary" style="font-size: medium;" role="alert">
                       {{.message}}
@@ -30,6 +44,7 @@
 
 
              <button type="button" class="btn btn-success btn-lg btn-block" onclick="Create()">Create variable</button>
+            <button type="button" class="btn btn-warning btn-lg btn-block"  onclick="GetByName()">Get My variable</button>
              <button type="button" class="btn btn-warning btn-lg btn-block"  onclick="ListAll()">List all variables</button>
               <button type="button" class="btn btn-danger btn-lg btn-block" onclick="DeleteAll()">Delete all variables</button>
 
@@ -38,8 +53,8 @@
                           <li class="list-group-item active">List of variables</li>
                           {{range .variables}}
                             <li class="list-group-item d-flex justify-content-between align-items-center">
-                              {{.Value}}
-                              <span class="badge badge-primary badge-pill">{{.Name}}</span>
+                              Name: {{.Name}}
+                              <span class="badge badge-primary badge-pill">{{.Value}}</span>
                             </li>
                             {{end}}
                           {{end}}
@@ -50,24 +65,53 @@
 
 
     <script>
+
+        $('.dropdown-item').on('click',  function(){
+                var btnObj = $(this).parent().siblings('button');
+                $(btnObj).text($(this).text());
+                $(btnObj).val($(this).text());
+                $('#target').val($(this).text());
+            });
+
             function Create() {
                  var name  = document.getElementById("name").value
-                 document.getElementById("myForm").action = "/v1/variable/" + name;
-                 document.getElementById("myForm").submit();
+                 var value  = document.getElementById("value").value
+                 var target  = document.getElementById("target").value
+                 if (name == "" || value == "" || target == "") {
+                    alert("Please fill name and value the fields and select target server")
+                    return
+                 }
+                window.location.href  = "/v1/variable/set/" + name + "/" + value + "/" + target
+
             }
              function GetByName() {
+                 var target  = document.getElementById("target").value
                  var name  = document.getElementById("name").value
-                 document.getElementById("myForm").action = "/v1/variable/" + name;
-                 document.getElementById("myForm").submit();
+                    if (name == "" || value == "" || target == "") {
+                       alert("Please fill name field and select target server" )
+                       return
+                    }
+                 window.location.href  = "/v1/variable/" + name + "/" + target;
+
              }
+
               function ListAll() {
-                 document.getElementById("myForm").action = "/v1/list";
-                 document.getElementById("myForm").submit();
+               var target  = document.getElementById("target").value
+               if (target == "") {
+                    alert("Please select the backend server")
+                    return
+               }
+                window.location.href =  "/v1/list/" + target;
               }
 
               function DeleteAll() {
-                document.getElementById("myForm").action = "/v1/delete";
-                document.getElementById("myForm").submit();
+                  var target  = document.getElementById("target").value
+                 if (target == "") {
+                                  alert("Please select the backend server")
+                                  return
+                 }
+
+               window.location.href  = "/v1/delete/" + target;
               }
     </script>
 

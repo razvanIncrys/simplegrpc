@@ -13,25 +13,52 @@ type Variable struct {
 	Value string
 }
 
+// SetMyVariableToEnvironment sets a variable in the environment
+func SetMyVariableToEnvironment(variableName string, variableValue string) (string, error) {
+	if variableName == "" {
+		return "", errors.New("variable name is empty")
+	}
+	//verifies if the variable is set in the environment
+	sysVariableValue, ok := os.LookupEnv(composeVariableName(variableName))
+	fmt.Printf("Variable %s is  present with value ", sysVariableValue)
+	//if not set, generate a random string and setting it in the environment
+	if !ok {
+		fmt.Printf("Variable %s is not present, set variable", variableName)
+		if len(variableValue) == 0 {
+			variableValue = generateRandomString(10)
+			fmt.Printf("Variable %s has no value, set variable random value", variableName)
+		}
+		err := os.Setenv(composeVariableName(variableName), variableValue)
+		if err != nil {
+			return "", err
+		}
+		return variableValue, nil
+	}
+
+	if sysVariableValue != variableValue {
+		err := os.Setenv(composeVariableName(variableName), variableValue)
+		if err != nil {
+			return "", err
+		}
+	}
+	return variableValue, nil
+}
+
+// GetMyVariableFromEnvironment gets a variable from the environment
 func GetMyVariableFromEnvironment(variableName string) (string, error) {
 
 	if variableName == "" {
 		return "", errors.New("variable name is empty")
 	}
 	//verifies if the variable is set in the environment
-	sysVariable, ok := os.LookupEnv(composeVariableName(variableName))
-	//if not set, generate a random string and setting it in the environment
+	sysVariableValue, ok := os.LookupEnv(composeVariableName(variableName))
 	if !ok {
-		fmt.Printf("Variable %s is not present, set default value", variableName)
-		sysVariable = generateRandomString(10)
-		err := os.Setenv(composeVariableName(variableName), sysVariable)
-		if err != nil {
-			return "", err
-		}
+		return "", errors.New("variable not found")
 	}
-	return sysVariable, nil
+	return sysVariableValue, nil
 }
 
+// GetAllMyVariablesFromEnvironment gets all variables from the environment
 func GetAllMyVariablesFromEnvironment() []Variable {
 	var variables []Variable
 	for _, e := range os.Environ() {
@@ -44,6 +71,7 @@ func GetAllMyVariablesFromEnvironment() []Variable {
 	return variables
 }
 
+// DeleteAllMyVariablesFromEnvironment deletes all variables from the environment
 func DeleteAllMyVariablesFromEnvironment() (bool, error) {
 	var variables []Variable
 	for _, e := range os.Environ() {

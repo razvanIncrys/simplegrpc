@@ -1,0 +1,12 @@
+#Create a variable and set it to the generated value
+GET http://localhost:9001/v1/set/test1/test1_value
+###
+#Get a variable
+GET http://localhost:9001/v1/get/test1
+###
+#List all variables
+GET http://localhost:9001/v1/list
+###
+#Delete all variables
+GET http://localhost:9001/v1/delete
+###

@@ -2,7 +2,7 @@ package gClient
 
 import (
 	"context"
-	"github.com/razvanIncrys/simplegrpc/pb"
+	"github.com/razvanIncrys/simplegrpc/frontend/pb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"log"
