@@ -15,7 +15,7 @@ import (
 
 const (
 	PORT      = "9000"
-	HTTP_PORT = "80"
+	HTTP_PORT = "9001"
 )
 
 // start server

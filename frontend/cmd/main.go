@@ -7,8 +7,8 @@ import (
 
 const (
 	webPort            = ":8080"
-	GatewayGRPCPort    = ":80"
-	GatewayGRPCAddress = "http://10.7.226.225"
+	GatewayGRPCPort    = ":9001"
+	GatewayGRPCAddress = "http://backend"
 )
 
 func main() {

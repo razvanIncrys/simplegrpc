@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  selector:
+    matchLabels:
+      app: simplegrpc
+      tier: backend
+      track: stable
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: simplegrpc
+        tier: backend
+        track: stable
+    spec:
+      containers:
+        - name: backend
+          image: "razvanincrys/backend:latest"
+          ports:
+            - name: grpc-gateway
+              containerPort: 9001

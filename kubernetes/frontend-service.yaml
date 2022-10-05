@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+spec:
+  selector:
+    app: simplegrpc
+    tier: frontend
+  ports:
+    - protocol: "TCP"
+      name: "web-frontend"
+      port: 80
+      targetPort: web-frontend
+  type: LoadBalancer
